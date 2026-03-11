@@ -31,7 +31,7 @@
 
 use atom_file::{Data, Storage};
 use heap::GHeap;
-use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
+pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 use std::sync::{Arc, Mutex, RwLock};
 
 mod block;
