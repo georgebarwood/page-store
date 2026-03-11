@@ -1,0 +1,22 @@
+[package]
+name = "page-store"
+version = "1.0.1"
+edition = "2024"
+authors = ["George Barwood"]
+description = "Management of data pages"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/georgebarwood/page-store/"
+categories = ["database-implementations"]
+include = ["/src"]
+
+[dependencies]
+atom-file = "1.0.0"
+pstd = { version = "0.1.0", optional=true }
+rustc-hash = "1.1.0"
+
+[features]
+renumber = []
+log = []
+verify = []
+compact = []
+pstd = ["dep:pstd","atom-file/pstd"]
