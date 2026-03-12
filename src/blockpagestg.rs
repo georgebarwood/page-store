@@ -12,6 +12,10 @@ First word of allocated page is 64-bit page number ( to allow relocation ).
 */
 
 /// Implementation of [PageStorage].
+///
+/// BlockPageStorage first divides the file into a small number of variable size files ( each built out of fixed size blocks ), and then allocates pages from these files, with each file being used to store pages of a particular size. So this is implemented as three structs: BlockStg which managed fixed size blocks, DividedStg which implements multiple files out of fixed size blocks and finally BlockPageStorage which uses the files to manage variable size pages. Since blocks are fixed size, when there is a free block, the last block in the file can be relocated to fill the gap. Similarly, when there is a free page, the last page in the subfile can be relocated to fill the gap. Thus the amount of unused file storage is minimal.
+///
+/// The choice of block size and page sizes is not fixed and can be configured. There is some advantage in choosing a block size which can be divided exactly by a range of integers – this means that when a page is read, the read does not cross a block boundary, so there is a single read to the underlying file system (disregarding “small” reads which are required to establish the page location, which can be buffered). For example, a block size of 27,720 ( = 5 x 7 x 8 x 9 x 11 ) can be divided evenly by integers in the range 6 to 12.
 pub struct BlockPageStg {
     /// Underlying Divided Storage.
     pub ds: DividedStg,

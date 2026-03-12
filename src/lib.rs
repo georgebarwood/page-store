@@ -29,6 +29,8 @@
 //!     assert!( *d == vec![1,2,3,4] ); // Reader still sees "old" data.
 //! ```
 
+#![deny(missing_docs)]
+
 use atom_file::{Data, Storage};
 use heap::GHeap;
 pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
@@ -51,7 +53,9 @@ use std::collections::BTreeMap;
 /// Save or Rollback.
 #[derive(PartialEq, Eq, PartialOrd, Clone, Copy)]
 pub enum SaveOp {
+    /// Save changes.
     Save,
+    /// Roll changes back.
     RollBack,
 }
 
@@ -580,15 +584,19 @@ impl Drop for AccessPagedData {
 }
 
 /// Memory limits.
+/// 
+/// Default block capacity is 27720  = 5 x 7 x 9 x 11, which is divisible by 6..=12.
+///
+/// Giving page sizes of 2302, 2512, 2764, 3072, 3437, 3952, 4612 net of 8 byte page header.
 #[non_exhaustive]
 pub struct Limits {
     /// Atomic file limits
     pub af_lim: atom_file::Limits,
-    /// Block capacity
+    /// Block capacity - default is 27720 = 5 x 7 x 9 x 11.
     pub blk_cap: u64,
-    /// Page sizes
+    /// Page sizes - default is 7.
     pub page_sizes: usize,
-    /// Largest division of page
+    /// Largest division of page - default is 12.
     pub max_div: usize,
 }
 
