@@ -2,6 +2,10 @@
 //!
 //! [`PageStorageInfo`] has information about the page sizes available. The default maximum page size is 4612.
 //!
+//! A cache ( Stash ) of pages is maintained, including a history of each modified page ( where necessary ).
+//! 
+//! If the cache size exceeds a limit, the least used pages are discarded to reduce memory usage.
+//! 
 //!# Test example
 //!
 //! ```
@@ -390,7 +394,7 @@ impl SharedPagedData {
     #[cfg(not(feature = "compact"))]
     */
 
-    /// Construct default SharedPageData ( default depends on compact feature ).
+    /// Construct default SharedPageData. stg is the backing storage.
     pub fn new(stg: Box<dyn Storage>) -> Arc<Self> {
         let limits = crate::Limits::default();
         Self::new_from_ps(crate::blockpagestg::BlockPageStg::new(stg, &limits))
@@ -585,7 +589,7 @@ impl Drop for AccessPagedData {
 
 /// Memory limits.
 /// 
-/// Default block capacity is 27720  = 5 x 7 x 9 x 11, which is divisible by 6..=12.
+/// Default block capacity is 27720  = 5 x 7 x 8 x 9 x 11, which is divisible by 6..=12.
 ///
 /// Giving page sizes of 2302, 2512, 2764, 3072, 3437, 3952, 4612 net of 8 byte page header.
 #[non_exhaustive]
