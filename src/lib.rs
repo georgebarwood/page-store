@@ -3,9 +3,9 @@
 //! [`PageStorageInfo`] has information about the page sizes available. The default maximum page size is 4612.
 //!
 //! A cache ( Stash ) of pages is maintained, including a history of each modified page ( where necessary ).
-//! 
+//!
 //! If the cache size exceeds a limit, the least used pages are discarded to reduce memory usage.
-//! 
+//!
 //!# Test example
 //!
 //! ```
@@ -412,13 +412,11 @@ impl SharedPagedData {
             stash: Mutex::new(stash),
             ps: RwLock::new(ps),
             psi,
-     
         })
     }
 
     /// Get read access to a virtual read-only copy of the pages.
-    pub fn new_reader(self: &Arc<Self>) -> AccessPagedData
-    {
+    pub fn new_reader(self: &Arc<Self>) -> AccessPagedData {
         let time = self.stash.lock().unwrap().begin_read();
         AccessPagedData {
             writer: false,
@@ -428,7 +426,7 @@ impl SharedPagedData {
     }
 
     /// Get write access to the pages.
-    pub fn new_writer(self: &Arc<Self>) -> AccessPagedData{
+    pub fn new_writer(self: &Arc<Self>) -> AccessPagedData {
         AccessPagedData {
             writer: true,
             time: 0,
@@ -452,7 +450,7 @@ pub struct AccessPagedData {
 
 impl AccessPagedData {
     /// Construct access to a virtual read-only copy of the pages.
-    #[deprecated(note="use SharedPagedData::new_reader instead")]
+    #[deprecated(note = "use SharedPagedData::new_reader instead")]
     pub fn new_reader(spd: Arc<SharedPagedData>) -> Self {
         let time = spd.stash.lock().unwrap().begin_read();
         AccessPagedData {
@@ -463,7 +461,7 @@ impl AccessPagedData {
     }
 
     /// Construct access to the pages.
-    #[deprecated(note="use SharedPagedData::new_writer instead")] 
+    #[deprecated(note = "use SharedPagedData::new_writer instead")]
     pub fn new_writer(spd: Arc<SharedPagedData>) -> Self {
         AccessPagedData {
             writer: true,
@@ -588,7 +586,7 @@ impl Drop for AccessPagedData {
 }
 
 /// Memory limits.
-/// 
+///
 /// Default block capacity is 27720  = 5 x 7 x 8 x 9 x 11, which is divisible by 6..=12.
 ///
 /// Giving page sizes of 2302, 2512, 2764, 3072, 3437, 3952, 4612 net of 8 byte page header.

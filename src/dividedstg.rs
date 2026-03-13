@@ -300,7 +300,7 @@ impl DividedStg {
 
 #[test]
 fn divided_stg_test() {
-    use atom_file::MemFile;
+    use atom_file::{BasicStorage, MemFile};
     let blk_cap = 10000;
     let stg = MemFile::new();
     let mut ds = DividedStg::new(stg.clone(), blk_cap);
