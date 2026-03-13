@@ -1,6 +1,6 @@
 [package]
 name = "page-store"
-version = "1.0.3"
+version = "1.0.9"
 edition = "2024"
 authors = ["George Barwood"]
 description = "Management of data pages"
@@ -11,10 +11,14 @@ include = ["/src"]
 
 [dependencies]
 atom-file = "1.0.0"
+#atom-file = { path = "../atom-file" }
+
 pstd = { version = "0.1.0", optional=true }
 rustc-hash = "2.0.0"
 
 [features]
+default = ["verify","renumber"]
+
 renumber = []
 log = []
 verify = []
