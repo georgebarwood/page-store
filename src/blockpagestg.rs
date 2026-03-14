@@ -441,7 +441,7 @@ impl PageStorageInfo for SizeInfo {
 
 #[test]
 fn test_block_page_stg() {
-    use atom_file::{BasicStorage, MemFile};
+    use atom_file::MemFile;
     let stg = MemFile::new();
     let limits = Limits::default();
     let mut bps = BlockPageStg::new(stg.clone(), &limits);

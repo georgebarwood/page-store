@@ -321,7 +321,7 @@ impl BlockStg {
 
 #[test]
 fn block_test() {
-    use atom_file::{BasicStorage, MemFile};
+    use atom_file::MemFile;
     let blk_cap = 10000;
     let data = b"hello there";
     let stg = MemFile::new();
