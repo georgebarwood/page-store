@@ -1,6 +1,6 @@
 [package]
 name = "page-store"
-version = "1.0.11"
+version = "1.0.12"
 edition = "2024"
 authors = ["George Barwood"]
 description = "Management of data pages"
@@ -8,6 +8,9 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/georgebarwood/page-store/"
 categories = ["database-implementations"]
 include = ["/src"]
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
 atom-file = "1.0.0"
