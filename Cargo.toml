@@ -1,6 +1,6 @@
 [package]
 name = "page-store"
-version = "1.0.12"
+version = "1.0.13"
 edition = "2024"
 authors = ["George Barwood"]
 description = "Management of data pages"
@@ -16,7 +16,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 atom-file = "1.0.0"
 #atom-file = { path = "../atom-file" }
 
-pstd = { version = "0.1.0", optional=true }
+pstd = { version = "1.0.0", optional=true }
 rustc-hash = "2.0.0"
 
 [features]
