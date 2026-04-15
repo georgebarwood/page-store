@@ -6,6 +6,20 @@ use std::cmp::min;
 use std::sync::Arc;
 
 /// Divides Storage into sub-files of arbitrary size using [BlockStg].
+///
+/// A sub-file is constructed from a tree of fixed size blocks.
+/// The leaf-level (data) blocks have user-data, the branch-level blocks
+/// have lists of block numbers ( base is number of block numbers per branch block ).
+///
+/// Diagram for 3-level tree ( extra levels = 2 ), base = 3, 5 data blocks.
+///
+///   Level 0 : Root Block (2 entries)
+///
+///   Level 1 : Branch 0 (3 entries)         Branch 1 (2 entries)      
+///
+///   Level 2 : Data 0 | Data 1 | Data 2     Data 3 | Data 4
+///
+/// When a new Data Block is added, if the parent Branch Block is full, a new Branch Block is needed. Similarly when a new Branch Block is added, if the parent is full, a new second level Branch Block is needed. In the example above this would mean a new level and a new Root Block when the 10th data block is added. See add_blocks and set_block below.
 pub struct DividedStg {
     /// Underlying block storage.
     pub bs: BlockStg,
@@ -19,14 +33,19 @@ pub struct DividedStg {
 pub const FD_SIZE: usize = 8 + 8;
 
 /// [DividedStg] File Descriptor.
+///
+/// A file descriptor has the root block number and the file size.
+///
+/// It also keeps the number of levels and the number of data blocks
+/// ( which can be derived from the file size ).
 pub struct FD {
     /// Root block.
     root: u64,
     /// File size in bytes.
     size: u64,
-    /// Number of data blocks needed ( can be computed from file size ).
+    /// Number of data blocks needed ( can be computed from file size using [`DividedStg::blocks`]).
     blocks: u64,
-    /// Number of levels needed ( can be computed from file size ).
+    /// Number of extra levels needed ( can be computed from blocks using [`DividedStg::levels`]).
     level: u8,
     /// Set true when the FD is updated.
     pub changed: bool,
@@ -185,10 +204,10 @@ impl DividedStg {
             if reqd > f.blocks {
                 let new_level = self.levels(reqd);
                 while f.level < new_level {
-                    let blk = self.bs.new_block();
+                    let blk = self.bs.new_block(); // Allocate new root block.
                     self.set_num(blk, 0, f.root);
-                    f.root = blk;
-                    f.level += 1;
+                    f.root = blk; // Set new root in FD
+                    f.level += 1; // Increase tree height
                 }
                 self.add_blocks(f, reqd);
             }
