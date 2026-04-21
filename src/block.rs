@@ -220,8 +220,9 @@ impl BlockStg {
 
         #[cfg(feature = "log")]
         println!(
-            "BlockStg::save allocated blocks={}",
-            self.blk_count - self.first_blk
+            "BlockStg::save allocated blocks={} file size={}",
+            self.blk_count - self.first_blk,
+            self.blk_count * self.blk_size
         );
 
         self.stg.commit(self.blk_count * self.blk_size);
