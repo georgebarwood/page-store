@@ -491,7 +491,7 @@ impl AccessPagedData {
 
     /// Set the data of the specified page.
     pub fn set_data(&self, lpnum: u64, data: Data) {
-        debug_assert!(self.writer);
+        assert!(self.writer);
 
         // Get copy of current data.
         let pinfo = self.stash().get_pinfo(lpnum);
@@ -519,7 +519,7 @@ impl AccessPagedData {
 
     /// Allocate a page.
     pub fn alloc_page(&self) -> u64 {
-        debug_assert!(self.writer);
+        assert!(self.writer);
         self.spd.ps.write().unwrap().new_page()
     }
 
@@ -535,13 +535,13 @@ impl AccessPagedData {
 
     /// Check whether compressing a page is worthwhile.
     pub fn compress(&self, size: usize, saving: usize) -> bool {
-        debug_assert!(self.writer);
+        assert!(self.writer);
         self.spd.psi.compress(size, saving)
     }
 
     /// Commit changes to underlying file ( or rollback page allocations ).
     pub fn save(&self, op: SaveOp) -> usize {
-        debug_assert!(self.writer);
+        assert!(self.writer);
         match op {
             SaveOp::Save => {
                 self.spd.ps.write().unwrap().save();
