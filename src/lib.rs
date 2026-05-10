@@ -85,6 +85,8 @@ pub trait PageStorage: Send + Sync {
     fn rollback(&mut self);
     /// Wait until save is complete.
     fn wait_complete(&self);
+    /// Called on program termination.
+    fn shutdown(&mut self);
     #[cfg(feature = "verify")]
     /// Get set of free pages and number of pages ever allocated ( for VERIFY builtin function ).
     fn get_free(&mut self) -> (crate::HashSet<u64>, u64);
@@ -437,6 +439,11 @@ impl SharedPagedData {
     /// Wait until current commits have been written.
     pub fn wait_complete(&self) {
         self.ps.read().unwrap().wait_complete();
+    }
+
+    /// Called on program termination.
+    pub fn shutdown(&self) {
+        self.ps.write().unwrap().shutdown();
     }
 }
 

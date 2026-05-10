@@ -233,6 +233,11 @@ impl BlockStg {
         self.stg.wait_complete();
     }
 
+    /// Called on program termination.
+    pub fn shutdown(&mut self) {
+        self.stg.shutdown();
+    }
+
     /// Write header fields to underlying storage.
     fn write_header(&mut self) {
         self.stg.write_u64(8, self.blk_count);

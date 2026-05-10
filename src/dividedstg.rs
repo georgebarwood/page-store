@@ -197,6 +197,11 @@ impl DividedStg {
         self.bs.wait_complete();
     }
 
+    /// Called on program termination.
+    pub fn shutdown(&mut self) {
+        self.bs.shutdown();
+    }
+
     /// Allocate sufficient blocks for file of specified size.
     fn allocate(&mut self, f: &mut FD, size: u64) {
         if size > f.size {

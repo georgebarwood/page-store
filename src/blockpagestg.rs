@@ -356,6 +356,10 @@ impl PageStorage for BlockPageStg {
         self.ds.wait_complete();
     }
 
+    fn shutdown(&mut self) {
+        self.ds.shutdown();
+    }
+
     #[cfg(feature = "verify")]
     fn get_free(&mut self) -> (crate::HashSet<u64>, u64) {
         let mut free = crate::HashSet::default();
