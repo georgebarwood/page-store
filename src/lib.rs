@@ -601,7 +601,7 @@ impl Drop for AccessPagedData {
 pub struct Limits {
     /// Atomic file limits
     pub af_lim: atom_file::Limits,
-    /// Block capacity - default is 27720 = 5 x 7 x 9 x 11.
+    /// Block capacity - default is 27720 = 5 x 7 x 8 x 9 x 11.
     pub blk_cap: u64,
     /// Page sizes - default is 7.
     pub page_sizes: usize,
