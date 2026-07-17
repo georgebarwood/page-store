@@ -1,7 +1,7 @@
 use crate::block::BlockStg;
 use crate::block::RSVD_SIZE;
 use crate::util;
-use atom_file::{Data, Storage};
+use atom_file::{Data, Storage, PVec};
 use std::cmp::min;
 use std::sync::Arc;
 
@@ -127,7 +127,7 @@ impl DividedStg {
     /// Write data to specified file at specified offset.
     pub fn write(&mut self, f: &mut FD, offset: u64, data: &[u8]) {
         let n = data.len();
-        let data = Arc::new(data.to_vec());
+        let data = Arc::new(PVec::from(data));
         self.write_data(f, offset, data, n);
     }
 

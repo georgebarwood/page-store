@@ -1,5 +1,5 @@
 use crate::util;
-use atom_file::{Data, Storage};
+use atom_file::{Data, Storage, PVec, pvec};
 use std::cmp::min;
 use std::collections::BTreeSet;
 use std::sync::Arc;
@@ -131,7 +131,7 @@ impl BlockStg {
     /// Set numbered block/offset to specified data.
     pub fn set(&mut self, bn: u64, offset: u64, data: &[u8]) {
         let n = data.len();
-        let data = Arc::new(data.to_vec());
+        let data = Arc::new(PVec::from(data));
         self.set_data(bn, offset, data, 0, n);
     }
 
@@ -266,7 +266,7 @@ impl BlockStg {
             return;
         }
 
-        let mut buf = vec![0; self.blk_size as usize];
+        let mut buf = pvec![0; self.blk_size as usize];
         self.stg.read(from * self.blk_size, &mut buf);
 
         let bn = util::get(&buf, 0, self.nsz);
@@ -291,7 +291,7 @@ impl BlockStg {
 
     /// Fill the specified block with zeroes.
     fn clear_block(&mut self, pb: u64) {
-        let buf = vec![0; self.blk_size as usize];
+        let buf = pvec![0; self.blk_size as usize];
         self.stg.write_vec(pb * self.blk_size, buf);
     }
 

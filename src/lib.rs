@@ -35,7 +35,7 @@
 
 #![deny(missing_docs)]
 
-use atom_file::{Data, Storage};
+use atom_file::{Data, Storage, PVec, pvec};
 use heap::GHeap;
 pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 use std::sync::{Arc, Mutex, RwLock};

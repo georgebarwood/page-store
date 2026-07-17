@@ -1,4 +1,4 @@
-use crate::{Data, Limits, PageStorage, PageStorageInfo, Storage, dividedstg, util};
+use crate::{Data, Limits, PageStorage, PageStorageInfo, Storage, dividedstg, util, PVec, pvec};
 use dividedstg::{DividedStg, FD, FD_SIZE};
 use std::collections::BTreeSet;
 use std::sync::Arc;
@@ -78,7 +78,7 @@ impl BlockPageStg {
         );
 
         s.header_size = (HEADER_SIZE + s.psi.sizes * FD_SIZE) as u64;
-        s.zbytes = Arc::new(vec![0; s.psi.max_size_page()]);
+        s.zbytes = Arc::new(pvec![0; s.psi.max_size_page()]);
 
         #[cfg(feature = "log")]
         println!("bps new alloc={:?}", &s.allocs());
@@ -166,7 +166,7 @@ impl BlockPageStg {
             let last = self.alloc(fx) - 1;
             let ps = self.page_size(fx);
             if last != ix {
-                let mut buf = vec![0; ps as usize];
+                let mut buf = pvec![0; ps as usize];
                 self.read(fx, last * ps, &mut buf);
                 let pn = util::getu64(&buf, 0);
                 let (fx1, _size, ix1) = self.get_pn_info(pn);
@@ -213,13 +213,13 @@ impl BlockPageStg {
 
     /// Clear sub-file region.
     fn clear(&mut self, fx: usize, off: u64, n: u64) {
-        let z = Arc::new(vec![0; n as usize]);
+        let z = Arc::new(pvec![0; n as usize]);
         self.write_data(fx, off, z);
     }
 
     /// Write sub-file.
     fn write(&mut self, fx: usize, off: u64, data: &[u8]) {
-        let data = Arc::new(data.to_vec());
+        let data = Arc::new(PVec::from(data));
         self.write_data(fx, off, data);
     }
 
@@ -320,7 +320,7 @@ impl PageStorage for BlockPageStg {
         if fx == 0 {
             return Data::default();
         }
-        let mut data = vec![0; size];
+        let mut data = pvec![0; size];
         let off = PAGE_HSIZE as u64 + ix * self.page_size(fx);
         self.read(fx, off, &mut data);
         Arc::new(data)
