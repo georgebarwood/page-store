@@ -37,7 +37,17 @@
 
 use atom_file::{Data, Storage, PVec, pvec};
 use heap::GHeap;
-pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
+
+// use rustc_hash::FxHasher;
+// pub use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
+
+pub use pstd::{localalloc::Perm,collections::BTreeMap,collections::HashSet as HashSetA};
+
+/// HashMap.
+pub type HashMap<K,V> = pstd::collections::HashMap<K,V>;
+/// HashSet.
+pub type HashSet<K> = pstd::collections::HashSet<K>;
+
 use std::sync::{Arc, Mutex, RwLock};
 
 mod block;
@@ -47,12 +57,6 @@ mod heap;
 mod util;
 
 pub use blockpagestg::BlockPageStg;
-
-#[cfg(feature = "pstd")]
-use pstd::collections::BTreeMap;
-
-#[cfg(not(feature = "pstd"))]
-use std::collections::BTreeMap;
 
 /// Save or Rollback.
 #[derive(PartialEq, Eq, PartialOrd, Clone, Copy)]
